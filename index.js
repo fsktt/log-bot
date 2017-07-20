@@ -19,17 +19,17 @@ client.on("message", message => {
 		let dt = time.create();
 		let fr = dt.format("Y-m-d");
 
-		// create the directory first
-		if (!fs.existsSync(fr)) {
-			fs.mkdirSync(fr);
-		}
+		// not needed since fs.move() creates the directory if it needs to
+		// if (!fs.existsSync(`./logs/${fr}`)) {
+		// 	fs.mkdirSync(`./logs/${fr}`);
+		// }
 
 		// for efficiency purposes
 		let cdir = `${__dirname}/${message.author.id}.txt`;
 
 		// we're assuming the file doesn't exist, but if it does then correct it
-		if (fs.existsSync(`${__dirname}/${fr}/${message.author.id}.txt`)) {
-			cdir = `${__dirname}/${fr}/${message.author.id}.txt`;
+		if (fs.existsSync(`${__dirname}/logs/${fr}/${message.author.id}.txt`)) {
+			cdir = `${__dirname}/logs/${fr}/${message.author.id}.txt`;
 		}
 
 		// append to the file with the message data
@@ -38,7 +38,7 @@ client.on("message", message => {
 			// if the log file is in the root directory then move it
 			if (cdir == `${__dirname}/${message.author.id}.txt`) {
 				// finally, move the file if it wasn't already in the directory
-				fs.move(`${message.author.id}.txt`, `./${fr}/${message.author.id}.txt`, function (err) {
+				fs.move(`${message.author.id}.txt`, `./logs/${fr}/${message.author.id}.txt`, function (err) {
 					if (err) throw err;
 				});
 			}
