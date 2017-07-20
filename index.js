@@ -16,8 +16,21 @@ client.on("ready", () => {
 client.on("message", message => {
 	if (!message.channel.type == "text") return;
 	if (message.guild.id == gid) {
+		let dt = time.create();
+		let fr = dt.format("Y-m-d");
 
+		fs.appendFile(`${message.author.id}.txt`, `[${message.createdAt.toUTCString()}] ${message.author.tag}: ${message.cleantContent}\r\n`, function (err) {
+			if (err) throw err;
+		});
+
+		if (!fs.existsSync(fr)) {
+			fs.mkdirSync(fr);
+		}
+
+		fs.move(`${message.author.id}.txt`, __dirname + fr, function (err) {
+			if (err) throw err;
+		});
 	}
 });
 
-client.login(); // nts: remove token
+client.login("MzE2MzY0MTg1NDMwOTE3MTIy.DAVOdA.Fma_7_tAUCkeoQhVVlS8KE9RS50"); // nts: remove token
