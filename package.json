@@ -1,0 +1,20 @@
+{
+  "name": "log-bot",
+  "version": "1.0.0",
+  "description": "discord bot to log a specific server; making for a friend",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "discord.js",
+    "log",
+    "bot"
+  ],
+  "author": "nil",
+  "license": "MIT",
+  "dependencies": {
+    "fs-extra": "^4.0.0",
+    "node-datetime": "^1.0.1"
+  }
+}
