@@ -6,31 +6,44 @@ const Discord = require("discord.js");
 const fs	  = require("fs-extra");
 const time	  = require("node-datetime");
 
-const client = Discord.Client();
-const gid    = "196028709491310602"; // ugliest variable name ever
+const client = new Discord.Client();
+const gid    = "320775847671758851"; // ugliest variable name ever
 
 client.on("ready", () => {
 	console.log("[log-bot] connected!");
 });
 
 client.on("message", message => {
-	if (!message.channel.type == "text") return;
+	if (message.channel.type == "dm" || message.channel.type == "group") return;
 	if (message.guild.id == gid) {
 		let dt = time.create();
 		let fr = dt.format("Y-m-d");
 
-		fs.appendFile(`${message.author.id}.txt`, `[${message.createdAt.toUTCString()}] ${message.author.tag}: ${message.cleantContent}\r\n`, function (err) {
-			if (err) throw err;
-		});
-
+		// create the directory first
 		if (!fs.existsSync(fr)) {
 			fs.mkdirSync(fr);
 		}
 
-		fs.move(`${message.author.id}.txt`, __dirname + fr, function (err) {
+		// for efficiency purposes
+		let cdir = `${__dirname}/${message.author.id}.txt`;
+
+		// we're assuming the file doesn't exist, but if it does then correct it
+		if (fs.existsSync(`${__dirname}/${fr}/${message.author.id}.txt`)) {
+			cdir = `${__dirname}/${fr}/${message.author.id}.txt`;
+		}
+
+		// append to the file with the message data
+		fs.appendFile(cdir, `[${message.createdAt.toUTCString()}] ${message.author.tag}: ${message.cleanContent}\r\n`, function (err) {
 			if (err) throw err;
+			// if the log file is in the root directory then move it
+			if (cdir == `${__dirname}/${message.author.id}.txt`) {
+				// finally, move the file if it wasn't already in the directory
+				fs.move(`${message.author.id}.txt`, `./${fr}/${message.author.id}.txt`, function (err) {
+					if (err) throw err;
+				});
+			}
 		});
 	}
 });
 
-client.login("MzE2MzY0MTg1NDMwOTE3MTIy.DAVOdA.Fma_7_tAUCkeoQhVVlS8KE9RS50"); // nts: remove token
+client.login(); // nts: remove token
